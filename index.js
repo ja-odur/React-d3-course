@@ -1,29 +1,33 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-import { range } from 'd3';
-import { Face } from "./Face";
+// import { range } from 'd3';
+// import { Face } from "./Face";
 
 
-const width = 160;
-const height = 160;
+const width = 960;
+const height = 960;
+const circleRadius = 30;
+const initialMousePosition = {x: width / 2, y: height / 2}
 
-const arr = range(6 * 3);
 
 
-const App = () => (arr.map(() =>
-    <Face
-        width={width}
-        height={height}
-        centerX={width / 2}
-        centerY={height / 2}
-        strokeWidth={6 + Math.random() + 3}
-        eyeOffSetX={20 +  Math.random() + 9}
-        eyeOffSetY={20 + Math.random() +  15}
-        eyeRadius={5 + Math.random() * 10}
-        mouthWidth={7 + Math.random() + 9}
-        mouthRadius={30 + Math.random() + 10}
-    />
-))
+
+const App = () => {
+    const [mousePosition, setMousePosition] = useState(initialMousePosition);
+    const handleMouseMove = useCallback((event) => {
+        const { clientX, clientY } = event
+        setMousePosition({ x: clientX, y: clientY })
+    }, [setMousePosition])
+    return (
+        <svg width={width} height={height} onMouseMove={handleMouseMove}>
+            <circle
+                cx={mousePosition.x}
+                cy={mousePosition.y}
+                r={circleRadius}
+            />
+        </svg>
+    )
+}
 
 
 const rootElement = document.getElementById('root');
