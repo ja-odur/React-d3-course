@@ -1,32 +1,24 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-// import { range } from 'd3';
-// import { Face } from "./Face";
+import { csv, csvFormat } from 'd3';
 
-
-const width = 960;
-const height = 960;
-const circleRadius = 30;
-const initialMousePosition = {x: width / 2, y: height / 2}
-
-
-
+const csvUrl = 'https://gist.githubusercontent.com/curran/b236990081a24761f7000567094914e0/raw/cssNamedColors.csv';
 
 const App = () => {
-    const [mousePosition, setMousePosition] = useState(initialMousePosition);
-    const handleMouseMove = useCallback((event) => {
-        const { clientX, clientY } = event
-        setMousePosition({ x: clientX, y: clientY })
-    }, [setMousePosition])
-    return (
-        <svg width={width} height={height} onMouseMove={handleMouseMove}>
-            <circle
-                cx={mousePosition.x}
-                cy={mousePosition.y}
-                r={circleRadius}
-            />
-        </svg>
-    )
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+       csv(csvUrl).then(setData)
+    }, [])
+
+    const message = (data) => {
+       let message = '';
+        message += Math.round(csvFormat(data).length / 1024) + ' KB\n';
+        message += data.length + ' rows\n';
+        message += data.columns.length + ' columns\n';
+        return message;
+    }
+    return <pre>{data ? message(data) : "Loading..."}</pre>;
 }
 
 
