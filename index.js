@@ -7,7 +7,7 @@ const csvUrl = 'https://gist.githubusercontent.com/curran/0ac4077c7fc6390f5dd33b
 
 const width = 960;
 const height = 500;
-const margin = {top: 20, right: 20, bottom: 20, left: 20}
+const margin = {top: 20, right: 20, bottom: 20, left: 200}
 
 const innerHeight = height - margin.top - margin.bottom;
 const innerWidth  = width - margin.left - margin.right;
@@ -41,9 +41,35 @@ const App = () => {
     return (
         <svg width={width} height={height}>
             <g transform={`translate(${margin.left}, ${margin.top})`}>
+                {xScale.ticks().map(tickValue => (
+                    <g key={tickValue} transform={`translate(${xScale(tickValue)}, ${0})`}>
+                        <line
+                            y2={innerHeight}
+                            stroke={"black"}
+                        />
+                        <text
+                            y={innerHeight + 3}
+                            style={{textAnchor: 'middle'}}
+                            dy=".71em"
+                        >
+                            {tickValue}
+                        </text>
+                    </g>
+                ))}
+                {yScale.domain().map(tickValue => (
+                    <text
+                        key={tickValue}
+                        y={yScale(tickValue) + yScale.bandwidth() / 2}
+                        x={-3}
+                        style={{textAnchor: 'end'}}
+                        dy=".32em"
+                    >
+                        {tickValue}
+                    </text>
+                ))}
                 {data.map(d =>
                     <rect
-                        x={0}
+                        key={d.Country}
                         y={yScale(d.Country)}
                         width={xScale(d.Population)}
                         height={yScale.bandwidth()}
