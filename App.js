@@ -23,7 +23,7 @@ const yAxisLabel = 'Temperature';
 
 // const siFormat = timeFormat('%a');
 // const siFormat = timeFormat('%d %b');
-const xAxisTickFormat = timeFormat('%a');
+const xAxisTickFormat = timeFormat('%d %b');
 
 
 export const App = () => {
