@@ -1,6 +1,6 @@
 import React from 'react';
 import { useData } from "./useData";
-import { extent, scaleLinear, format } from "d3";
+import { extent, scaleTime, scaleLinear, timeFormat } from "d3";
 import { AxisBottom } from "./AxisBottom";
 import { AxisLeft } from "./AxisLeft";
 import { Marks } from "./Marks";
@@ -14,15 +14,16 @@ const yAxisLabelOffset = 40;
 const innerHeight = height - margin.top - margin.bottom;
 const innerWidth  = width - margin.left - margin.right;
 
-const xValue = d => d.petal_length;
-const xAxisLabel = 'Petal Length';
+const xValue = d => d.timestamp;
+const xAxisLabel = 'Time';
 
-const yValue = d => d.sepal_width;
-const yAxisLabel = 'Sepal Width';
+const yValue = d => d.temperature;
+const yAxisLabel = 'Temperature';
 
 
-const siFormat = format('.2s');
-const xAxisTickFormat = tickValue => siFormat(tickValue).replace('G', 'B');
+// const siFormat = timeFormat('%a');
+// const siFormat = timeFormat('%d %b');
+const xAxisTickFormat = timeFormat('%a');
 
 
 export const App = () => {
@@ -32,14 +33,15 @@ export const App = () => {
         return <pre>Loading...</pre>
     }
 
-    const xScale = scaleLinear()
+    const xScale = scaleTime()
         .domain(extent(data, xValue))
         .range([0, innerWidth])
         .nice();
 
     const yScale = scaleLinear()
         .domain(extent(data, yValue))
-        .range([0, innerHeight]);
+        .range([innerHeight, 0])
+        .nice();
 
     return (
         <svg width={width} height={height}>
@@ -50,7 +52,7 @@ export const App = () => {
                     tickFormat={xAxisTickFormat}
                     tickOffet={7}
                 />
-                <AxisLeft yScale={yScale} innerWidth={innerWidth} tickOffset={5} />
+                <AxisLeft yScale={yScale} innerWidth={innerWidth} tickOffset={7} />
                 <text
                     className={'axis-label'}
                     x={innerWidth / 2}
@@ -72,7 +74,7 @@ export const App = () => {
                     yScale={yScale}
                     xValue={xValue}
                     yValue={yValue}
-                    circleRadius={7}
+                    circleRadius={3}
                     tooltipFormat={xAxisTickFormat}
                 />
 
