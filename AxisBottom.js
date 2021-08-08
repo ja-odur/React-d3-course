@@ -1,13 +1,11 @@
 import React from 'react';
 
-export const AxisBottom = ({ xScale, innerHeight, tickFormat }) => (
+export const AxisBottom = ({ xScale, innerHeight, tickFormat, tickOffet = 3 }) => (
     xScale.ticks().map(tickValue => (
         <g className="tick" key={tickValue} transform={`translate(${xScale(tickValue)}, ${0})`}>
-            <line
-                y2={innerHeight}
-            />
+            <line y2={innerHeight} />
             <text
-                y={innerHeight + 3}
+                y={innerHeight + tickOffet}
                 style={{textAnchor: 'middle'}}
                 dy=".71em"
             >
