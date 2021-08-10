@@ -1,33 +1,21 @@
 import React from 'react';
-import { line, curveNatural } from 'd3';
+import { geoEqualEarth, geoNaturalEarth1, geoPath, geoGraticule } from 'd3';
 
 
+// const projection = geoEqualEarth();
+const projection = geoNaturalEarth1();
+const path = geoPath(projection);
+const graticule = geoGraticule();
 
-export const Marks = ({
-  data,
-  xScale,
-  yScale,
-  xValue,
-  yValue,
-  tooltipFormat,
-  circleRadius
-}) => (
+export const Marks = ({data: { land, interiors }}) => (
     <g className="marks">
-        <path
-            fill="none"
-            stroke="black"
-            d={line().x(d => xScale(xValue(d))).y(d => yScale(yValue(d))).curve(curveNatural)(data)}
-        />
-        {/*{*/}
-        {/*    data.map(d =>*/}
-        {/*        <circle*/}
-        {/*            cx={xScale(xValue(d))}*/}
-        {/*            cy={yScale(yValue(d))}*/}
-        {/*            r={circleRadius}*/}
-        {/*        >*/}
-        {/*            <title>{tooltipFormat(xValue(d))}</title>*/}
-        {/*        </circle>*/}
-        {/*    )*/}
-        {/*}*/}
+        <path className="sphere" d={path({type: 'Sphere'})} />
+        <path className="graticules" d={path(graticule())} />
+        {
+            land.features.map(feature =>
+                <path className="land" d={path(feature)} />
+            )
+        }
+        <path className="interiors" d={path(interiors)} />
     </g>
 );
